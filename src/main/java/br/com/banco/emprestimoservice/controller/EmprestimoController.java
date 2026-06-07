@@ -10,7 +10,6 @@ import br.com.banco.emprestimoservice.dto.EmprestimoResponse;
 import br.com.banco.emprestimoservice.entity.Emprestimo;
 import br.com.banco.emprestimoservice.service.EmprestimoService;
 
-
 @RestController
 @RequestMapping("/emprestimos")
 public class EmprestimoController {
@@ -23,7 +22,8 @@ public class EmprestimoController {
     @PostMapping
     public EmprestimoResponse solicitarEmprestimo(@RequestBody EmprestimoRequest request) {
         Emprestimo emprestimo = new Emprestimo(request.getValor());
-        return emprestimoService.solicitacarEmprestimo(emprestimo, request.getSalario());
+        return emprestimoService.solicitacarEmprestimo(emprestimo, request.getSalario(),
+                request.getIdConta());
     }
-    
+
 }
