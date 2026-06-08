@@ -22,8 +22,7 @@ public class EmprestimoController {
     @PostMapping
     public EmprestimoResponse solicitarEmprestimo(@RequestBody EmprestimoRequest request) {
         Emprestimo emprestimo = new Emprestimo(request.getValor());
-        return emprestimoService.solicitacarEmprestimo(emprestimo, request.getSalario(),
-                request.getIdConta());
+        return emprestimoService.solicitacarEmprestimo(emprestimo, request.getIdConta());
     }
 
 }

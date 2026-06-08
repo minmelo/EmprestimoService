@@ -8,13 +8,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import br.com.banco.emprestimoservice.dto.EmprestimoResponse;
+import br.com.banco.emprestimoservice.dto.ResultadoDTO;
 import br.com.banco.emprestimoservice.entity.Emprestimo;
 
 @Service
 public class EmprestimoService {
     private final double multiplicadorMaxEmprestimo = 10.0;
 
-    public EmprestimoResponse solicitacarEmprestimo(Emprestimo emprestimo, double salario, String idConta) {
+    public EmprestimoResponse solicitacarEmprestimo(Emprestimo emprestimo, String idConta) {
+        ResultadoDTO salarioResponse = buscarSalario(idConta);
+
+        if (salarioResponse == null || !salarioResponse.isSucesso()) {
+            return new EmprestimoResponse(false, "Não foi possível obter o salário do cliente");
+
+        }
+        double salario = salarioResponse.getNovoValor();
+
         if (salario <= 0) {
             return new EmprestimoResponse(false, "Salário inválido");
         }
@@ -42,4 +51,18 @@ public class EmprestimoService {
                 true,
                 "Empréstimo aprovado e valor depositado");
     }
+
+    private ResultadoDTO buscarSalario(String idConta) {
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        String url = "https://contaprojvaporarquitetura-2.onrender.com/contas/"
+                + idConta
+                + "/salario";
+
+        return restTemplate.getForObject(
+                url,
+                ResultadoDTO.class);
+    }
+
 }
